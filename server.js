@@ -107,3 +107,25 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`API server running on http://localhost:${port}`);
 });
+const dictionary = {
+  "곤색": { type: "loanword", suggestion: "감색", note: "일본어 'こんいろ(紺色)'에서 온 말" },
+  "뗑깡": { type: "loanword", suggestion: "생떼·투정", note: "일본어 'てんかん(癲癇)'에서 유래된 구어" },
+  "간식": { type: "loanword", suggestion: "새참", note: "일본어 'かんしょく(間食)'에서 온 말" },
+  "잉꼬부부": { type: "loanword", suggestion: "원앙부부", note: "일본어 'いんこ(鸚鵡)'에서 온 말" },
+  "왔다리 갔다리": { type: "loanword", suggestion: "왔다 갔다", note: "일본어 'いったりきたり' 영향" },
+  "쓰키다시": { type: "loanword", suggestion: "곁들이 안주", note: "일본어 'つきだし(突き出し)'에서 온 말" },
+  "시말서": { type: "translationese", suggestion: "경위서", note: "일본어 'しまつ(始末)'에서 온 말" },
+  "거래선": { type: "translationese", suggestion: "거래처", note: "일본식 한자어 ‘取引先(とりひきさき)’" },
+  "수입선": { type: "translationese", suggestion: "수입처", note: "일본식 한자어 ‘輸入先’" },
+  "비상구": { type: "translationese", suggestion: "비상출구", note: "일본어 ‘非常口(ひじょうぐち)’" },
+  "호치키스": { type: "loanword", suggestion: "스테이플러", note: "일본 상표명 ‘ホッチキス’에서 유래" },
+  "유도리": { type: "loanword", suggestion: "여유·여유분", note: "일본어 'ゆとり'에서 온 말" },
+  "노가다": { type: "loanword", suggestion: "막일·현장노동", note: "일본어 'どかた'에서 온 말" },
+  "간지": { type: "loanword", suggestion: "느낌·분위기", note: "일본어 ‘カンジ(感じ)’에서 온 말" },
+  "다꾸앙": { type: "loanword", suggestion: "단무지", note: "일본어 'たくあん'에서 온 말" },
+  "다꽝": { type: "loanword", suggestion: "단무지", note: "‘다꾸앙’의 변형" },
+  "다대기": { type: "loanword", suggestion: "다진 양념·다진 고추", note: "일본어 ‘たたき’에서 온 말" },
+  "고로케": { type: "loanword", suggestion: "감자고로케", note: "일본어 ’コロッケ’에서 온 말" },
+  "벤또": { type: "loanword", suggestion: "도시락", note: "일본어 ’べんとう(弁当)’에서 온 말" },
+  "사시미": { type: "loanword", suggestion: "회·생선회", note: "일본어 ’さしみ’에서 온 말" }
+};
