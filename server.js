@@ -108,24 +108,276 @@ app.listen(port, () => {
   console.log(`API server running on http://localhost:${port}`);
 });
 const dictionary = {
-  "곤색": { type: "loanword", suggestion: "감색", note: "일본어 'こんいろ(紺色)'에서 온 말" },
-  "뗑깡": { type: "loanword", suggestion: "생떼·투정", note: "일본어 'てんかん(癲癇)'에서 유래된 구어" },
-  "간식": { type: "loanword", suggestion: "새참", note: "일본어 'かんしょく(間食)'에서 온 말" },
-  "잉꼬부부": { type: "loanword", suggestion: "원앙부부", note: "일본어 'いんこ(鸚鵡)'에서 온 말" },
-  "왔다리 갔다리": { type: "loanword", suggestion: "왔다 갔다", note: "일본어 'いったりきたり' 영향" },
-  "쓰키다시": { type: "loanword", suggestion: "곁들이 안주", note: "일본어 'つきだし(突き出し)'에서 온 말" },
-  "시말서": { type: "translationese", suggestion: "경위서", note: "일본어 'しまつ(始末)'에서 온 말" },
-  "거래선": { type: "translationese", suggestion: "거래처", note: "일본식 한자어 ‘取引先(とりひきさき)’" },
-  "수입선": { type: "translationese", suggestion: "수입처", note: "일본식 한자어 ‘輸入先’" },
-  "비상구": { type: "translationese", suggestion: "비상출구", note: "일본어 ‘非常口(ひじょうぐち)’" },
-  "호치키스": { type: "loanword", suggestion: "스테이플러", note: "일본 상표명 ‘ホッチキス’에서 유래" },
-  "유도리": { type: "loanword", suggestion: "여유·여유분", note: "일본어 'ゆとり'에서 온 말" },
-  "노가다": { type: "loanword", suggestion: "막일·현장노동", note: "일본어 'どかた'에서 온 말" },
-  "간지": { type: "loanword", suggestion: "느낌·분위기", note: "일본어 ‘カンジ(感じ)’에서 온 말" },
-  "다꾸앙": { type: "loanword", suggestion: "단무지", note: "일본어 'たくあん'에서 온 말" },
-  "다꽝": { type: "loanword", suggestion: "단무지", note: "‘다꾸앙’의 변형" },
-  "다대기": { type: "loanword", suggestion: "다진 양념·다진 고추", note: "일본어 ‘たたき’에서 온 말" },
-  "고로케": { type: "loanword", suggestion: "감자고로케", note: "일본어 ’コロッケ’에서 온 말" },
-  "벤또": { type: "loanword", suggestion: "도시락", note: "일본어 ’べんとう(弁当)’에서 온 말" },
-  "사시미": { type: "loanword", suggestion: "회·생선회", note: "일본어 ’さしみ’에서 온 말" }
+  // 음식·요리·식생활
+  "오뎅": {
+    type: "loanword",
+    suggestion: "어묵",
+    note: "일본어 おでん(oden)에서 온 말. ‘어묵’으로 순화 권장됨."
+  },
+  "다마네기": {
+    type: "loanword",
+    suggestion: "양파",
+    note: "일본어 たまねぎ에서 온 말."
+  },
+  "다꾸앙": {
+    type: "loanword",
+    suggestion: "단무지",
+    note: "일본어 たくあん에서 온 무절임."
+  },
+  "다꽝": {
+    type: "loanword",
+    suggestion: "단무지",
+    note: "‘다꾸앙’의 변형 표기."
+  },
+  "다대기": {
+    type: "loanword",
+    suggestion: "다진 양념, 다진 고추",
+    note: "일본어 たたき에서 온 것으로 보는 속어."
+  },
+  "고로케": {
+    type: "loanword",
+    suggestion: "감자고로케, 감자완자튀김",
+    note: "일본어 コロッケ에서 온 말."
+  },
+  "우동": {
+    type: "loanword",
+    suggestion: "가락국수",
+    note: "일본식 국수 ‘うどん’에서 온 말."
+  },
+  "짬뽕": {
+    type: "loanword",
+    suggestion: "해물 얼큰 국수",
+    note: "일본식 ‘ちゃんぽん’에서 들어온 말로 알려짐."
+  },
+  "와사비": {
+    type: "loanword",
+    suggestion: "고추냉이",
+    note: "일본어 わさび에서 온 말."
+  },
+  "사시미": {
+    type: "loanword",
+    suggestion: "회, 생선회",
+    note: "일본어 さしみ에서 온 말."
+  },
+  "쓰키다시": {
+    type: "loanword",
+    suggestion: "곁들이 안주",
+    note: "일본어 つきだし(突き出し)에서 온 말."
+  },
+  "소보로빵": {
+    type: "loanword",
+    suggestion: "곰보빵",
+    note: "일본어 そぼろパン에서 온 제과 용어."
+  },
+  "야끼만두": {
+    type: "loanword",
+    suggestion: "군만두",
+    note: "일본어 ‘焼き(やき)’의 영향을 받은 표현."
+  },
+  "낑깡": {
+    type: "loanword",
+    suggestion: "금귤, 동귤",
+    note: "일본어 きんかん에서 온 말."
+  },
+  "간식": {
+    type: "loanword",
+    suggestion: "새참",
+    note: "일본어 かんしょく(間食)에서 온 말로 보는 견해."
+  },
+  "소라색": {
+    type: "loanword",
+    suggestion: "하늘색",
+    note: "일본어 空色(そらいろ)의 영향."
+  },
+
+  // 일상 속 속어·구어
+  "간지": {
+    type: "loanword",
+    suggestion: "느낌, 멋, 맵시",
+    note: "일본어 感じ(かんじ)에서 온 속어."
+  },
+  "노가다": {
+    type: "loanword",
+    suggestion: "막일, 현장 노동",
+    note: "일본어 속어 ‘どかた’(토목 노동자)에서 온 비하적 표현."
+  },
+  "무데뽀": {
+    type: "loanword",
+    suggestion: "막무가내",
+    note: "일본어 無鉄砲(むてっぽう)에서 온 표현."
+  },
+  "유도리": {
+    type: "loanword",
+    suggestion: "여유, 여유분, 융통성",
+    note: "일본어 ゆとり에서 온 말."
+  },
+  "찌라시": {
+    type: "loanword",
+    suggestion: "전단지, 광고지",
+    note: "일본어 チラシ(ちらし)에서 온 말."
+  },
+  "가오": {
+    type: "loanword",
+    suggestion: "체면, 얼굴",
+    note: "일본어 顔(かお)에서 온 속어."
+  },
+  "단도리": {
+    type: "loanword",
+    suggestion: "준비, 채비, 사전 조율",
+    note: "일본어 段取り(だんどり)에서 온 말."
+  },
+  "만땅": {
+    type: "loanword",
+    suggestion: "가득, 가득 참",
+    note: "일본어 満タン(まんたん)에서 온 말."
+  },
+  "와리깡": {
+    type: "loanword",
+    suggestion: "각자 계산, N빵",
+    note: "일본어 割り勘(わりかん)에서 온 말."
+  },
+  "뗑깡": {
+    type: "loanword",
+    suggestion: "생떼, 투정",
+    note: "일본어 癲癇(てんかん)에서 온 속어로 보는 견해."
+  },
+  "기스": {
+    type: "loanword",
+    suggestion: "흠집, 상처",
+    note: "일본어 傷(きず)의 음이 변형된 표현으로 보는 견해."
+  },
+  "쇼부": {
+    type: "loanword",
+    suggestion: "승부, 결판",
+    note: "일본어 勝負(しょうぶ)에서 온 말."
+  },
+  "곤조": {
+    type: "loanword",
+    suggestion: "고집, 근성",
+    note: "일본어 根性(こんじょう)의 변형."
+  },
+  "나가리": {
+    type: "loanword",
+    suggestion: "취소, 유찰, 허사",
+    note: "일본어 流れ(ながれ)에서 온 말."
+  },
+  "뽀록나다": {
+    type: "loanword",
+    suggestion: "들통나다, 드러나다",
+    note: "일본어 露見(ろけん) 등에서 온 속어로 보는 견해."
+  },
+  "후까시": {
+    type: "loanword",
+    suggestion: "허세, 허풍",
+    note: "일본어 ふかし(부풀리기)에서 온 말."
+  },
+  "이빠이": {
+    type: "loanword",
+    suggestion: "가득, 잔뜩",
+    note: "일본어 一杯(いっぱい)에서 온 말."
+  },
+  "구라": {
+    type: "loanword",
+    suggestion: "거짓말",
+    note: "일본 속어에서 들어온 표현으로 보는 견해."
+  },
+  "야미": {
+    type: "loanword",
+    suggestion: "암거래, 불법 거래",
+    note: "일본어 闇(やみ, 어둠·암시장)에서 온 말."
+  },
+  "똔똔": {
+    type: "loanword",
+    suggestion: "본전, 득실 없음",
+    note: "일본 상업 속어에서 온 말로 보는 견해."
+  },
+  "레자": {
+    type: "loanword",
+    suggestion: "인조가죽",
+    note: "영어 leather의 일본식 발음 レザー에서 온 말."
+  },
+  "함바": {
+    type: "loanword",
+    suggestion: "현장 식당",
+    note: "일본어 飯場(はんば)에서 온 건설 현장 용어."
+  },
+  "시마이": {
+    type: "loanword",
+    suggestion: "마무리, 끝, 정리",
+    note: "일본어 仕舞い(しまい)에서 온 말."
+  },
+
+  // 생활용품·기타
+  "호치키스": {
+    type: "loanword",
+    suggestion: "스테이플러",
+    note: "일본에서 상표명이 일반명사화된 ‘ホッチキス’에서 온 말."
+  },
+  "구루마": {
+    type: "loanword",
+    suggestion: "손수레, 수레",
+    note: "일본어 車(くるま)에서 온 표현."
+  },
+  "잉꼬부부": {
+    type: "loanword",
+    suggestion: "원앙부부",
+    note: "일본어 鸚哥(いんこ, 잉꼬)에서 온 말."
+  },
+  "곤색": {
+    type: "loanword",
+    suggestion: "감색",
+    note: "일본어 紺(こん) 발음에서 온 말."
+  },
+
+  // 공문서·행정·한자식 표현 (translationese)
+  "시말서": {
+    type: "translationese",
+    suggestion: "경위서",
+    note: "일본어 始末書(しまつしょ)에서 온 행정 용어."
+  },
+  "거래선": {
+    type: "translationese",
+    suggestion: "거래처",
+    note: "일본식 한자어 取引先(とりひきさき)의 영향을 받은 표현."
+  },
+  "수입선": {
+    type: "translationese",
+    suggestion: "수입처",
+    note: "일본어 輸入先(ゆにゅうさき)의 영향을 받은 표현."
+  },
+  "비상구": {
+    type: "translationese",
+    suggestion: "비상출구, 대피구",
+    note: "일본어 非常口(ひじょうぐち)에서 온 한자식 조합."
+  },
+  "가건물": {
+    type: "translationese",
+    suggestion: "임시 건물",
+    note: "일본어 仮建物에서 온 표현으로 보는 견해."
+  },
+  "가계약": {
+    type: "translationese",
+    suggestion: "임시 계약",
+    note: "일본어 仮契約에서 온 말."
+  },
+  "가불": {
+    type: "translationese",
+    suggestion: "선지급, 미리 지급",
+    note: "일본어 仮払(かりばらい)와 연관된 표현으로 보는 견해."
+  },
+  "대합실": {
+    type: "translationese",
+    suggestion: "맞이방, 대기실",
+    note: "일본어 待合室(まちあいしつ)의 구조를 따른 말로 보는 견해."
+  },
+  "숙박계": {
+    type: "translationese",
+    suggestion: "숙박 신고서, 숙박부",
+    note: "일본식 ‘~계(屆)’ 서식어(宿泊届)의 영향."
+  },
+  "게양": {
+    type: "translationese",
+    suggestion: "올리다, 달다",
+    note: "국어 순화 대상인 일본식 한자어 揭揚의 영향으로 지적되는 표현."
+  }
 };
