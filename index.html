@@ -438,7 +438,7 @@
     </section>
   </main>
 
-      <script>
+        <script>
     function escapeHtml(text) {
       return text
         .replace(/&/g, "&amp;")
@@ -597,9 +597,24 @@
 
         resultOriginal.innerHTML = html;
 
-        // 5) 오른쪽 카드: finalItems 기준으로 한 번씩만 표시
+        // 5) 오른쪽 카드: 문장 등장 순서대로 정렬
+        //    ranges는 이미 start 기준으로 정렬되어 있으니,
+        //    여기서 처음 등장하는 span+type 조합만 뽑아서 순서 리스트 생성
+        const sidebarSeen = new Set();
+        const orderedSidebarItems = [];
+        for (const r of ranges) {
+          const it = r.item;
+          const span = (it.span || "").trim();
+          if (!span) continue;
+          const key = `${span}:::${it.type || ""}`;
+          if (sidebarSeen.has(key)) continue;
+          sidebarSeen.add(key);
+          orderedSidebarItems.push(it);
+        }
+
+        // 6) 오른쪽 카드 렌더링
         foundList.innerHTML = "";
-        finalItems.forEach((item) => {
+        orderedSidebarItems.forEach((item) => {
           const wrapper = document.createElement("div");
           wrapper.className = "found-item";
 
