@@ -438,7 +438,7 @@
     </section>
   </main>
 
-  <script>
+    <script>
     function escapeHtml(text) {
       return text
         .replace(/&/g, "&amp;")
@@ -485,16 +485,15 @@
 
         const data = await response.json();
 
-        // 로딩 버튼 복구
+        // 버튼 상태 복구
         btn.disabled = false;
         btn.style.opacity = "1";
         label.textContent = "검사하기";
         spinner.style.display = "none";
 
-        // 혹시라도 items가 없으면 초기화
         if (!data.items) data.items = [];
 
-        // ✅ 1) 완전 동일한 항목(같은 위치+같은 span+같은 type) 중복 제거
+        // 1) 완전히 같은 항목(위치+단어+type) 중복 제거
         const seen = new Set();
         const uniqueItems = [];
         for (const item of data.items) {
@@ -503,9 +502,6 @@
           seen.add(key);
           uniqueItems.push(item);
         }
-
-        // start 기준으로 정렬
-        uniqueItems.sort((a, b) => a.start - b.start);
 
         if (uniqueItems.length === 0) {
           status.textContent =
@@ -520,27 +516,50 @@
         status.textContent = `${uniqueItems.length}개의 표현을 발견했습니다.`;
         resultOriginal.classList.add("active");
 
-        // ✅ 2) 겹치는 구간 처리해서 원문이 절대 바뀌지 않도록 하이라이트
+        // 2) span 문자열 기준으로 위치 재계산
+        //    - AI가 준 start/end는 믿지 않고, 원문에서 직접 찾는다
+        const ranges = [];
+
+        function hasOverlap(start, end) {
+          return ranges.some((r) => start < r.end && end > r.start);
+        }
+
+        for (const item of uniqueItems) {
+          const span = item.span;
+          if (!span || !span.trim()) continue;
+
+          const len = span.length;
+          let idx = text.indexOf(span);
+
+          // 같은 단어가 여러 번 나올 수 있으니
+          // 겹치지 않는 위치를 찾을 때까지 계속 탐색
+          while (idx !== -1) {
+            const start = idx;
+            const end = idx + len;
+
+            if (!hasOverlap(start, end)) {
+              ranges.push({ start, end, item });
+              break;
+            }
+
+            idx = text.indexOf(span, idx + 1);
+          }
+        }
+
+        // 시작 위치 기준으로 정렬
+        ranges.sort((a, b) => a.start - b.start);
+
+        // 3) ranges를 이용해서 하이라이트 HTML 생성
         let cursor = 0;
         let html = "";
 
-        for (const item of uniqueItems) {
-          // 안전 범위 보정
-          let start = Math.max(0, item.start);
-          let end = Math.min(text.length, item.end);
+        for (const r of ranges) {
+          const { start, end, item } = r;
 
-          // 이미 지나간 구간이면 스킵 (겹치는 항목 방지)
-          if (end <= cursor) {
-            continue;
-          }
-
-          // 중간에 빈 구간 있으면 그대로 넣기
+          // 중간 깨끗한 구간 추가
           if (cursor < start) {
             html += escapeHtml(text.slice(cursor, start));
           }
-
-          // 만약 start가 cursor보다 앞에 있으면 cursor부터만 하이라이트
-          if (start < cursor) start = cursor;
 
           const spanText = escapeHtml(text.slice(start, end));
 
@@ -555,14 +574,14 @@
           cursor = end;
         }
 
-        // 마지막 남은 부분 붙이기
+        // 마지막 남은 부분
         if (cursor < text.length) {
           html += escapeHtml(text.slice(cursor));
         }
 
         resultOriginal.innerHTML = html;
 
-        // ✅ 3) 오른쪽 카드도 uniqueItems 기준으로만 생성
+        // 4) 오른쪽 카드 생성 (uniqueItems 기준)
         foundList.innerHTML = "";
         uniqueItems.forEach((item) => {
           const wrapper = document.createElement("div");
