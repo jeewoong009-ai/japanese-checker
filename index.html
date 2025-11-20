@@ -450,7 +450,8 @@
       document.getElementById("inputText").value = "";
       document.getElementById("statusText").textContent = "";
       document.getElementById("resultOriginal").classList.remove("active");
-      document.getElementById("resultOriginal").innerHTML = "아직 분석한 문장이 없습니다.";
+      document.getElementById("resultOriginal").innerHTML =
+        "아직 분석한 문장이 없습니다.";
       document.getElementById("foundList").innerHTML =
         '<div class="found-empty">아직 분석 결과가 없습니다.</div>';
     }
@@ -484,13 +485,31 @@
 
         const data = await response.json();
 
+        // 로딩 버튼 복구
         btn.disabled = false;
         btn.style.opacity = "1";
         label.textContent = "검사하기";
         spinner.style.display = "none";
 
-        if (!data.items || data.items.length === 0) {
-          status.textContent = "일본어 기원어·번역투·관청체 표현을 찾지 못했습니다.";
+        // 혹시라도 items가 없으면 초기화
+        if (!data.items) data.items = [];
+
+        // ✅ 1) 완전 동일한 항목(같은 위치+같은 span+같은 type) 중복 제거
+        const seen = new Set();
+        const uniqueItems = [];
+        for (const item of data.items) {
+          const key = `${item.start}-${item.end}-${item.type}-${item.span}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          uniqueItems.push(item);
+        }
+
+        // start 기준으로 정렬
+        uniqueItems.sort((a, b) => a.start - b.start);
+
+        if (uniqueItems.length === 0) {
+          status.textContent =
+            "일본어 기원어·번역투·관청체 표현을 찾지 못했습니다.";
           resultOriginal.classList.add("active");
           resultOriginal.textContent = text;
           foundList.innerHTML =
@@ -498,40 +517,54 @@
           return;
         }
 
-        status.textContent = `${data.items.length}개의 표현을 발견했습니다.`;
+        status.textContent = `${uniqueItems.length}개의 표현을 발견했습니다.`;
         resultOriginal.classList.add("active");
 
-        // 인덱스 기반 하이라이트
-        const items = data.items.slice().sort((a, b) => a.start - b.start);
+        // ✅ 2) 겹치는 구간 처리해서 원문이 절대 바뀌지 않도록 하이라이트
         let cursor = 0;
         let html = "";
 
-        for (const item of items) {
-          const safeStart = Math.max(0, item.start);
-          const safeEnd = Math.min(text.length, item.end);
+        for (const item of uniqueItems) {
+          // 안전 범위 보정
+          let start = Math.max(0, item.start);
+          let end = Math.min(text.length, item.end);
 
-          if (cursor < safeStart) {
-            html += escapeHtml(text.slice(cursor, safeStart));
+          // 이미 지나간 구간이면 스킵 (겹치는 항목 방지)
+          if (end <= cursor) {
+            continue;
           }
 
-          const spanText = escapeHtml(text.slice(safeStart, safeEnd));
+          // 중간에 빈 구간 있으면 그대로 넣기
+          if (cursor < start) {
+            html += escapeHtml(text.slice(cursor, start));
+          }
+
+          // 만약 start가 cursor보다 앞에 있으면 cursor부터만 하이라이트
+          if (start < cursor) start = cursor;
+
+          const spanText = escapeHtml(text.slice(start, end));
+
           let cls = "";
           if (item.type === "loanword") cls = "highlight-loanword";
-          else if (item.type === "translationese") cls = "highlight-translationese";
-          else if (item.type === "bureaucratese") cls = "highlight-bureaucratese";
+          else if (item.type === "translationese")
+            cls = "highlight-translationese";
+          else if (item.type === "bureaucratese")
+            cls = "highlight-bureaucratese";
 
           html += `<span class="${cls}">${spanText}</span>`;
-          cursor = safeEnd;
+          cursor = end;
         }
 
+        // 마지막 남은 부분 붙이기
         if (cursor < text.length) {
           html += escapeHtml(text.slice(cursor));
         }
+
         resultOriginal.innerHTML = html;
 
-        // 오른쪽 리스트
+        // ✅ 3) 오른쪽 카드도 uniqueItems 기준으로만 생성
         foundList.innerHTML = "";
-        data.items.forEach((item, idx) => {
+        uniqueItems.forEach((item) => {
           const wrapper = document.createElement("div");
           wrapper.className = "found-item";
 
@@ -558,7 +591,8 @@
         });
       } catch (err) {
         console.error(err);
-        status.textContent = "오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+        status.textContent =
+          "오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
         btn.disabled = false;
         btn.style.opacity = "1";
         label.textContent = "검사하기";
