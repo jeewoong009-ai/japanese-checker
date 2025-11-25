@@ -36,7 +36,7 @@ const dictionary = {
     type: "loanword",
     suggestion: "당구 실력 또는 당구 공",
     note: "일본어 '타마(たま, 玉)'에서 온 말"
-  }
+  },
   "다마네기": {
     type: "loanword",
     suggestion: "양파",
