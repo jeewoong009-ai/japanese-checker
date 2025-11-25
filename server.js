@@ -42,6 +42,11 @@ const dictionary = {
     suggestion: "차게 한 것",
     note: "일본어 冷やす의 명사형 冷やし에서 온 말"
   },
+  "조센징": {
+    type: "loanword",
+    suggestion: "조선인",
+    note: "조선인에 대한 일본어 독음 명칭이지만, 일제강점기를 거치며 조선인에 대한 비하적 표현으로 쓰임."
+  },
   "다마네기": {
     type: "loanword",
     suggestion: "양파",
