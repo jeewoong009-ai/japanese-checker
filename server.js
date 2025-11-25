@@ -39,7 +39,7 @@ const dictionary = {
   "히야시": {
     type: "loanword",
     suggestion: "차게 한 것",
-    note: " 일본어 冷やす의 명사형 冷やし에서 온 말"
+    note: "일본어 冷やす의 명사형 冷やし에서 온 말"
   },
   "다마네기": {
     type: "loanword",
